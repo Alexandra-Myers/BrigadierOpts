@@ -61,8 +61,7 @@ public abstract class ExpectingCommand {
         for(int a = 0; a < argumentNames.size(); a++) {
             if(i.contains(a) || currentNode.branch != branches.get(argumentNames.get(a)))
                 continue;
-            List<ArgumentName> nextAccepted = new ArrayList<>();
-            nextAccepted.addAll(accepted);
+            List<ArgumentName> nextAccepted = new ArrayList<>(accepted);
             ArgumentName currentName = argumentNames.get(a);
             nextAccepted.add(currentName);
             WrappedCommandNode nextNode = new WrappedCommandNode(currentNode.branch, commandDispatcher.register(currentNode.createBuilder()
