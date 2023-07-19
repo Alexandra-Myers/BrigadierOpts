@@ -1,10 +1,10 @@
 package ivorius.brigadieropts.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 
@@ -17,7 +17,7 @@ public abstract class ExpectingCommand {
     public final int permission;
     public final String commandName;
     public final List<ArgumentName> argumentNames;
-    public final Map<ArgumentName, WrappedArgumentType> arguments;
+    public final Map<ArgumentName, ArgumentType<?>> arguments;
     public final Map<ArgumentName, ArgumentBranch> branches;
     public ExpectingCommand(CommandDispatcher<CommandSource> commandDispatcher) {
         permission = permissionLevel();
@@ -48,7 +48,7 @@ public abstract class ExpectingCommand {
                     ArgumentName currentName = argumentNames.get(i);
                     accepted.add(currentName);
                     WrappedCommandNode currentNode = new WrappedCommandNode(originNode.branch, commandDispatcher.register(originNode.createBuilder()
-                            .then(!currentName.isLiteral ? Commands.argument(currentName.name, arguments.get(currentName).argumentType) : Commands.literal(currentName.name))
+                            .then(!currentName.isLiteral ? Commands.argument(currentName.name, arguments.get(currentName)) : Commands.literal(currentName.name))
                             .executes(context -> buildArgsAndExecute(context, accepted))));
                     List<Integer> startingList = new ArrayList<>();
                     startingList.add(i);
@@ -66,7 +66,7 @@ public abstract class ExpectingCommand {
             ArgumentName currentName = argumentNames.get(a);
             nextAccepted.add(currentName);
             WrappedCommandNode nextNode = new WrappedCommandNode(currentNode.branch, commandDispatcher.register(currentNode.createBuilder()
-                    .then(!currentName.isLiteral ? Commands.argument(currentName.name, arguments.get(currentName).argumentType) : Commands.literal(currentName.name))
+                    .then(!currentName.isLiteral ? Commands.argument(currentName.name, arguments.get(currentName)) : Commands.literal(currentName.name))
                     .executes(context -> buildArgsAndExecute(context, nextAccepted))));
             List<Integer> nextList = new ArrayList<>();
             nextList.add(a);
@@ -80,8 +80,7 @@ public abstract class ExpectingCommand {
         for(ArgumentName name : acceptedArguments) {
             if (name.isLiteral)
                 continue;
-            WrappedArgumentType wrapped = arguments.get(name);
-            Object o = wrapped.getArgument(context, name.name);
+            Object o = name.function.apply(context, name.name);
             if(o != null)
                 args.put(name, o);
         }
@@ -92,7 +91,7 @@ public abstract class ExpectingCommand {
         List<ArgumentName> defaultBranchRequired = new ArrayList<>();
         for (ArgumentName name : required) {
             if (branches.get(name) == ArgumentBranch.DEFAULT) {
-                baseBuilder = baseBuilder.then(Commands.argument(name.name, arguments.get(name).argumentType));
+                baseBuilder = baseBuilder.then(Commands.argument(name.name, arguments.get(name)));
                 defaultBranchRequired.add(name);
             }
         }
@@ -104,7 +103,7 @@ public abstract class ExpectingCommand {
                 List<ArgumentName> thisBranch = new ArrayList<>();
                 for (ArgumentName name : required) {
                     if(branches.get(name) == branches.get(literal)) {
-                        branchBuilder = branchBuilder.then(Commands.argument(name.name, arguments.get(name).argumentType));
+                        branchBuilder = branchBuilder.then(Commands.argument(name.name, arguments.get(name)));
                         thisBranch.add(name);
                     }
                 }
@@ -119,7 +118,7 @@ public abstract class ExpectingCommand {
     }
     abstract int permissionLevel();
     abstract String commandName();
-    abstract Map<ArgumentName, WrappedArgumentType> typeMap();
+    abstract Map<ArgumentName, ArgumentType<?>> typeMap();
     public Map<ArgumentName, ArgumentBranch> getBranches() {
         Map<ArgumentName, ArgumentBranch> branches = new HashMap<>();
         for(ArgumentName argumentName : argumentNames) {
