@@ -1,4 +1,4 @@
-package ivorius.mcopts.enums;
+package ivorius.brigadieropts.enums;
 
 public enum ScoreHolderType {
     SINGLE_NAME,

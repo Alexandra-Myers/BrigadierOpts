@@ -1,4 +1,4 @@
-package ivorius.mcopts.commands;
+package ivorius.brigadieropts.commands;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;

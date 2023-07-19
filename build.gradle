@@ -18,8 +18,8 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 version = '1.0.0-1.16.5'
-group = 'ivorius.mcopts' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'mcopts'
+group = 'ivorius.brigadieropts' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = 'brigadieropts'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -80,7 +80,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'mcopts', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', 'brigadieropts', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
                 reccomplex {
@@ -129,7 +129,7 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title": "mcopts",
+                "Specification-Title": "brigadieropts",
                 "Specification-Vendor": "ivorius",
                 "Specification-Version": "1", // We are version 1 of ourselves
                 "Implementation-Title": project.name,

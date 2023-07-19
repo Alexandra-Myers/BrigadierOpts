@@ -1,7 +1,7 @@
 import com.google.common.collect.Sets
-import ivorius.mcopts.commands.parameters.Parameter
-import ivorius.mcopts.commands.parameters.Parameters
-import ivorius.mcopts.commands.parameters.expect.Expect
+import ivorius.brigadieropts.commands.parameters.Parameter
+import ivorius.brigadieropts.commands.parameters.Parameters
+import ivorius.brigadieropts.commands.parameters.expect.Expect
 import net.minecraft.command.ICommandSender
 import net.minecraft.server.MinecraftServer
 import net.minecraft.util.math.BlockPos

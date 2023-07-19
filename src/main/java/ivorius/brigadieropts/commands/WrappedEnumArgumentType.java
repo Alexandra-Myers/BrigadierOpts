@@ -1,4 +1,4 @@
-package ivorius.mcopts.commands;
+package ivorius.brigadieropts.commands;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
