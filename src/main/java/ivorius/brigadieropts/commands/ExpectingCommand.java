@@ -4,7 +4,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 
@@ -74,7 +73,7 @@ public abstract class ExpectingCommand {
         }
     }
     abstract int execute(CommandSource commandSource, Map<ArgumentName, Object> arguments);
-    public int buildArgsAndExecute(CommandContext<CommandSource> context, List<ArgumentName> acceptedArguments) throws CommandSyntaxException {
+    public int buildArgsAndExecute(CommandContext<CommandSource> context, List<ArgumentName> acceptedArguments) {
         Map<ArgumentName, Object> args = new HashMap<>();
         for(ArgumentName name : acceptedArguments) {
             if (name.isLiteral)
