@@ -72,15 +72,15 @@ public abstract class ExpectingCommand {
             build(commandDispatcher, nextList, nextNode, nextAccepted);
         }
     }
-    abstract int execute(CommandSource commandSource, Map<ArgumentName, Object> arguments);
+    public abstract int execute(CommandSource commandSource, Map<String, Object> arguments);
     public int buildArgsAndExecute(CommandContext<CommandSource> context, List<ArgumentName> acceptedArguments) {
-        Map<ArgumentName, Object> args = new HashMap<>();
+        Map<String, Object> args = new HashMap<>();
         for(ArgumentName name : acceptedArguments) {
             if (name.isLiteral)
                 continue;
             Object o = name.function.apply(context, name.name);
             if(o != null)
-                args.put(name, o);
+                args.put(name.name, o);
         }
         return execute(context.getSource(), args);
     }
@@ -114,9 +114,9 @@ public abstract class ExpectingCommand {
         ret.add(new WrappedCommandNode(ArgumentBranch.DEFAULT, commandDispatcher.register(baseBuilder)));
         return ret;
     }
-    abstract int permissionLevel();
-    abstract String commandName();
-    abstract Map<ArgumentName, ArgumentType<?>> typeMap();
+    public abstract int permissionLevel();
+    public abstract String commandName();
+    public abstract Map<ArgumentName, ArgumentType<?>> typeMap();
     public Map<ArgumentName, ArgumentBranch> getBranches() {
         Map<ArgumentName, ArgumentBranch> branches = new HashMap<>();
         for(ArgumentName argumentName : argumentNames) {
